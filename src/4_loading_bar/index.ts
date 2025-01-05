@@ -1,6 +1,9 @@
 import * as THREE from "three";
 
 import GUI from "lil-gui";
+
+import { gsap } from "gsap";
+
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 import { GLTFLoader, RGBELoader } from "three/examples/jsm/Addons.js";
 
@@ -31,16 +34,39 @@ import displacmentFragmentShader from "./displacement/fragment.glsl";
 import overlayVertexShader from "./overlay/vertex.glsl";
 import overlayFragmentShader from "./overlay/fragment.glsl";
 
-// Loading
+// Loading (Mentioned this in previous lesson but read it again)
 
 // We want to know when everything is loaded
 // - There is only one model in the scene, but we are loading many assets
 // - environment map, for environment map I used HDR
 //      I didn't use 6 images of the environment map
+//      (I didn't use CubeTextureLoader, I used RGBELoader)
 // - The model's geometries
 // - All the textures used in the model
 
-// We are going to use LoadingManager
+// ----- Loding bar and animating loading bar -------
+
+// inside onLoad in previous lesson we defined hiding (setting uAppha to 0)
+// of overlay we have
+
+// now inside onProgress we can define animation of loading bar
+
+// we will use gsap library again
+
+// This is going to be a bit more comples
+// we want to animate loading bar depending of how many assets
+// are loaded, for example if we have 10 assets and 5 are loaded
+// loading bar would get to the half
+
+// we will simulate a normal bandwith
+// we are going to mimic bad bandwith
+
+// you will need to deal with newtwotk tab
+// I explained this inside readme
+
+// ---- Create a loading bar with HTML and CSS -------
+// we could have created a new plane with a shader material
+// but for the sake of the lesson we will add bar in HTML
 
 // ------------ gui -------------------
 /**
@@ -91,18 +117,6 @@ const sizes = {
 const canvas: HTMLCanvasElement | null = document.querySelector("canvas.webgl");
 
 if (canvas) {
-  // ---- loaders -------
-  /**
-   * @description loaders
-   */
-
-  const gltfLoader = new GLTFLoader();
-  // const cubeTextureLoader = new THREE.CubeTextureLoader();
-
-  const rgbeLoader = new RGBELoader();
-
-  // const textureLoader = new THREE.TextureLoader();
-
   // -------------------------------------------------------------------
   // -------------------------------------------------------------------
   // -------------------------------------------------------------------
@@ -155,6 +169,41 @@ if (canvas) {
       // I think I don't need this
       // overlayMaterial.needsUpdate = true;
     });
+
+  // -------------------------------------------------------------
+  // -------------------------------------------------------------
+  // -------------------------------------------------------------
+  // -------------------------------------------------------------
+  // ---- loaders and loading manager -------
+
+  /**
+   * @description loaders and LoadingManager
+   */
+
+  const loadingManager = new THREE.LoadingManager(
+    () => {
+      // onLoad
+      gsap.to(overlayMaterial.uniforms.uAlpha, { value: 0, duration: 3 });
+    },
+    (_, loaded, total) => {
+      if (loaded === total) {
+        console.log(_);
+        const progress = (100 * loaded) / total;
+        console.log(`progress: ${progress}%`);
+      }
+    },
+    () => {
+      // onError
+      console.log("Error with loading (loading manager)");
+    }
+  );
+  // we just pass manager in instatioations of loaders
+  const gltfLoader = new GLTFLoader(loadingManager);
+
+  const rgbeLoader = new RGBELoader(loadingManager);
+
+  // const cubeTextureLoader = new THREE.CubeTextureLoader();
+  // const textureLoader = new THREE.TextureLoader();
 
   // --------------------------------------------------------------
   // --------------------------------------------------------------
@@ -281,14 +330,15 @@ if (canvas) {
 
         setEnvironmentMapForMaterialsOfModel(environmentMap);
       });
-    },
-    () => {
+    }
+    // I'll remove this for now since I don't need them
+    /* () => {
       console.log("loading hdri progressing");
     },
     (err) => {
       console.log("HDRI not loaded");
       console.error(err);
-    }
+    } */
   );
   // -------------------------------------------------------------
   // -------------------------------------------------------------
