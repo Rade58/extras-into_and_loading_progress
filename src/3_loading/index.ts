@@ -40,6 +40,8 @@ import overlayFragmentShader from "./overlay/fragment.glsl";
 // - The model's geometries
 // - All the textures used in the model
 
+// We are going to use LoadingManager
+
 // ------------ gui -------------------
 /**
  * @description Debug UI - lil-ui
