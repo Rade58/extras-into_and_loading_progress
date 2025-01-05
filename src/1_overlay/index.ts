@@ -148,7 +148,6 @@ if (canvas) {
     // depthTest: false,
   });
 
-  // overlayMaterial.side = THREE.DoubleSide;
   const overlay = new THREE.Mesh(overlayGeometry, overlayMaterial);
 
   scene.add(overlay);

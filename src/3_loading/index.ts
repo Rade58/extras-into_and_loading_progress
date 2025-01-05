@@ -31,22 +31,14 @@ import displacmentFragmentShader from "./displacement/fragment.glsl";
 import overlayVertexShader from "./overlay/vertex.glsl";
 import overlayFragmentShader from "./overlay/fragment.glsl";
 
-// Overlalay color and alpha
-// because we want to change color and alpha of overlay
-// we will do this in fragment shader
+// Loading
 
-// but to be able to do this we need to set transparent to true
-// on our shader material
-
-// we will set alpha to be a uniform (uAlpha)
-// I will also define that we can change this uniform
-// with gui
-//
-
-// we want to animate alpha of overlay
-// but not so fast
-// we need to know when is everything loaded
-// we will learn this in next lesson
+// We want to know when everything is loaded
+// - There is only one model in the scene, but we are loading many assets
+// - environment map, for environment map I used HDR
+//      I didn't use 6 images of the environment map
+// - The model's geometries
+// - All the textures used in the model
 
 // ------------ gui -------------------
 /**
@@ -132,9 +124,7 @@ if (canvas) {
     // wireframe: true,
     vertexShader: overlayVertexShader,
     fragmentShader: overlayFragmentShader,
-    // for alpha to work
-    // now setting alpha to be something other than 1 in fragment shader
-    // will work
+
     transparent: true,
     // we wil add uAlpha uniform
     uniforms: {
