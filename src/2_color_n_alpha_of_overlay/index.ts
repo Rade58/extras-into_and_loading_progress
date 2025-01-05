@@ -28,30 +28,25 @@ import tintFragmentShader from "./tint/fragment.glsl";
 import displacmentVertexShader from "./displacement/vertex.glsl";
 import displacmentFragmentShader from "./displacement/fragment.glsl";
 
-// Overlay
-// we want black overlay that fades out
-
-//  we can do it in many ways
-// - animate <canvas> in CSS
-// - animate a <div> above the <canvas> in CSS
-// - animate a black rectangle in Three.js in front of the camera
-
-// we are going to pick third way since we want to keep doing
-// things in WebGL land
-
-// we can put a plane in front of the camera, we could add
-// in the camera object, and move it forward a bit
-
-// What we're going to do is put the plane in the scene
-// and position its vertices using a vertex shader
-
-// look for overlay in the code to see what are we doing
-
-// and look especially what we did in the vertex shader
 import overlayVertexShader from "./overlay/vertex.glsl";
 import overlayFragmentShader from "./overlay/fragment.glsl";
 
+// Overlalay color and alpha
+// because we want to change color and alpha of overlay
+// we will do this in fragment shader
+
+// but to be able to do this we need to set transparent to true
+// on our shader material
+
+// we will set alpha to be a uniform (uAlpha)
+// I will also define that we can change this uniform
+// with gui
 //
+
+// we want to animate alpha of overlay
+// but not so fast
+// we need to know when is everything loaded
+// we will learn this in next lesson
 
 // ------------ gui -------------------
 /**
@@ -81,6 +76,8 @@ const realisticRendering = gui.addFolder("Realistic Rendering");
 realisticRendering.close();
 const postProcessing = gui.addFolder("Post Processing");
 postProcessing.close();
+
+const overlayFolder = gui.addFolder("Overlay");
 
 gui.addColor({ randomColor: "" }, "randomColor");
 
@@ -126,24 +123,25 @@ if (canvas) {
   // --------------------------------------------------------------
   // --------- Overlay --------------------------------------------
   // --------------------------------------------------------------
-  // we did this because we want overley to cover entire clip space
-  // since overlay is in the middle of the screen always because
-  // the things we did with the vertex shader
-  // and we know that clip space goes from -1 to 1 in x and y
-  // we will increase our plane to cover entire clip space
-  // by just setting width and height to 2
+
   // const overlayGeometry = new THREE.PlaneGeometry(1, 1, 1, 1);
-  // const overlayGeometry = new THREE.PlaneGeometry(2, 2, 1, 1);
-  const overlayGeometry = new THREE.PlaneGeometry(1.9, 1.9, 1, 1);
-  // const overlayMaterial = new THREE.MeshBasicMaterial({
-  //   color: 0xff0000,
-  // });
+  const overlayGeometry = new THREE.PlaneGeometry(2, 2, 1, 1);
+  // const overlayGeometry = new THREE.PlaneGeometry(1.9, 1.9, 1, 1);
+
   const overlayMaterial = new THREE.ShaderMaterial({
-    wireframe: true,
+    // wireframe: true,
     vertexShader: overlayVertexShader,
     fragmentShader: overlayFragmentShader,
-
-    // transparent: true,
+    // for alpha to work
+    // now setting alpha to be something other than 1 in fragment shader
+    // will work
+    transparent: true,
+    // we wil add uAlpha uniform
+    uniforms: {
+      uAlpha: { value: 0.5 },
+      // uTime: { value: 0 },
+      // uColor: { value: new THREE.Color("#000000") },
+    },
     // depthWrite: false,
     // depthTest: false,
   });
@@ -152,6 +150,17 @@ if (canvas) {
   const overlay = new THREE.Mesh(overlayGeometry, overlayMaterial);
 
   scene.add(overlay);
+
+  overlayFolder
+    .add(overlayMaterial.uniforms.uAlpha, "value")
+    .min(0)
+    .max(1)
+    .step(0.01)
+    .name("overlayAlpha")
+    .onChange(() => {
+      // I think I don't need this since autoUpdate is true
+      // overlayMaterial.needsUpdate = true;
+    });
 
   // --------------------------------------------------------------
   // --------------------------------------------------------------
