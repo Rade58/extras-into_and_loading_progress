@@ -105,6 +105,8 @@ section.content div:nth-of-type(2n + 1){
 } */
 
 html {
+  /* I used css custom property in this example 
+  author of the workshop didn't */
   --progress: 0;
 }
 
@@ -119,7 +121,7 @@ html {
   transform-origin: top left;
 
   transition-property: transform visibility opacity;
-  transition-duration: 300ms;
+  transition-duration: 500ms;
 
 }
 
