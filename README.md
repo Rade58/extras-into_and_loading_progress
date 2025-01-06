@@ -31,3 +31,7 @@ Choose this value in the dropdown menu
 Reload
 
 **We created new profile because presets like Fast3G Slow3G are too slow** (Maybe I could have done this with Slow4G, but it doesn't matter, now you know how to create a new profile)
+
+# Keep an eye on the framerate
+
+Mixing HTML and WebGL is usually bad for performances
