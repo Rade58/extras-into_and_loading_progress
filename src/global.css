@@ -120,9 +120,12 @@ html {
   transform: scaleX(var(--progress));
   transform-origin: top left;
 
-  transition-property: transform visibility opacity;
+  transition-property: transform /* visibility opacity */;
   transition-duration: 500ms;
-  
+
+  /* for better performance */
+  will-change: transform;
+
 }
 
 .loading-bar.ended {

@@ -34,18 +34,17 @@ import displacmentFragmentShader from "./displacement/fragment.glsl";
 import overlayVertexShader from "./overlay/vertex.glsl";
 import overlayFragmentShader from "./overlay/fragment.glsl";
 
-// Disapearing bar when assets are loaded
+// Fixing loader animation
 
-// I already did this in previous lesson
-// but I want to see solution from workshop author
-// he wants to disapear the bar to the right
+// too jumpy at the end
 
-// go see what I added to css and what I did in onLoaded function
+// The animation looks a little jumpy for two reasons
+// - When we add meshes to the scene, materials, textures and things
+//  like that get compiled and loaded to the GPU and it can take few
+//  milliseconds
+// - The bar didn't finished its animation because there is a 0.5s transition on it
 
-// ps. removed opacity change in onProgress function
-
-//--------------------------
-// his solution looks better
+// we will do this with setTimeout (in onLoaded)
 
 // ------------ gui -------------------
 /**
@@ -165,18 +164,13 @@ if (canvas) {
   const loadingManager = new THREE.LoadingManager(
     () => {
       // onLoad
-      if (loading_bar) {
-        // instead of this I set in previous lesson
-        /* setTimeout(() => {
-          loading_bar.style.display = "none";
-        }, 500); */
-        // we can do this
-        loading_bar.classList.add("ended");
-        // we added this because it can happen that
-        // transform can be overwritten in onLoaded becaue
-        //  css change we are doing there
-        loading_bar.style.transform = "";
-      }
+      setTimeout(() => {
+        if (loading_bar) {
+          loading_bar.classList.add("ended");
+
+          loading_bar.style.transform = "";
+        }
+      }, 500);
 
       //
       gsap.to(overlayMaterial.uniforms.uAlpha, { value: 0, duration: 3 });
