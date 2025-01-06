@@ -46,6 +46,8 @@ import overlayFragmentShader from "./overlay/fragment.glsl";
 
 // we will do this with setTimeout (in onLoaded)
 
+// other solution would be to use gsap delayCallback
+
 // ------------ gui -------------------
 /**
  * @description Debug UI - lil-ui
@@ -164,16 +166,27 @@ if (canvas) {
   const loadingManager = new THREE.LoadingManager(
     () => {
       // onLoad
-      setTimeout(() => {
+      // this is the solution
+      /* setTimeout(() => {
         if (loading_bar) {
           loading_bar.classList.add("ended");
 
           loading_bar.style.transform = "";
+          gsap.to(overlayMaterial.uniforms.uAlpha, { value: 0, duration: 3 });
         }
       }, 500);
+       */
+      // but can be also done like this
+      gsap.delayedCall(0.5, () => {
+        if (loading_bar) {
+          loading_bar.classList.add("ended");
+
+          loading_bar.style.transform = "";
+          gsap.to(overlayMaterial.uniforms.uAlpha, { value: 0, duration: 3 });
+        }
+      });
 
       //
-      gsap.to(overlayMaterial.uniforms.uAlpha, { value: 0, duration: 3 });
     },
     /**
      *
