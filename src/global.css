@@ -122,6 +122,13 @@ html {
 
   transition-property: transform visibility opacity;
   transition-duration: 500ms;
-
+  
 }
 
+.loading-bar.ended {
+  transform: scaleX(0);
+  transition-timing-function: ease-in-out;
+  transition-duration: 1.5s;
+  transition-property: transform;
+  transform-origin: 100% 0;
+}

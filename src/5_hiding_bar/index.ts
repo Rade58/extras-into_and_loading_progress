@@ -40,6 +40,13 @@ import overlayFragmentShader from "./overlay/fragment.glsl";
 // but I want to see solution from workshop author
 // he wants to disapear the bar to the right
 
+// go see what I added to css and what I did in onLoaded function
+
+// ps. removed opacity change in onProgress function
+
+//--------------------------
+// his solution looks better
+
 // ------------ gui -------------------
 /**
  * @description Debug UI - lil-ui
@@ -159,11 +166,12 @@ if (canvas) {
     () => {
       // onLoad
       if (loading_bar) {
-        // loading_bar.style.display = "none";
-
-        setTimeout(() => {
+        // instead of this I set in previous lesson
+        /* setTimeout(() => {
           loading_bar.style.display = "none";
-        }, 500);
+        }, 500); */
+        // we can do this
+        loading_bar.classList.add("ended");
       }
 
       //
@@ -190,9 +198,9 @@ if (canvas) {
 
         loading_bar.style.setProperty("--progress", `${progressRatio}`);
 
-        if (loaded === total) {
+        /* if (loaded === total) {
           loading_bar.style.opacity = "0";
-        }
+        } */
       }
 
       if (loaded === total) {
