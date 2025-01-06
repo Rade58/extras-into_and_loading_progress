@@ -24,7 +24,7 @@ canvas.webgl {
   top: 0;
   left: 0;
   outline: none;
-  z-index: 50;
+  /* z-index: 50; */
 
   /* w don't need this */
   /* height: 100lvh; */
@@ -91,3 +91,35 @@ section.content div:nth-of-type(2n + 1){
   /* position: relative; */
   /* z-index: 200; */
 /* } */
+
+
+/* .loading-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: #1e1a20;
+  z-index: 100;
+  outline: none;
+} */
+
+html {
+  --progress: 0;
+}
+
+.loading-bar {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  height: 2px;
+  background: #ffffff;
+
+  transform: scaleX(var(--progress));
+  transform-origin: top left;
+
+  transition-property: transform visibility opacity;
+  transition-duration: 300ms;
+
+}
+

@@ -178,11 +178,11 @@ if (canvas) {
       // onLoad
       gsap.to(overlayMaterial.uniforms.uAlpha, { value: 0, duration: 3 });
     },
-    (_, loaded, total) => {
+    (url, loaded, total) => {
+      const progress = (100 * loaded) / total;
+      console.log(`progress: ${progress}%`);
       if (loaded === total) {
-        console.log(_);
-        const progress = (100 * loaded) / total;
-        console.log(`progress: ${progress}%`);
+        console.log("All assets loaded");
       }
     },
     () => {

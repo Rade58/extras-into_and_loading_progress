@@ -12,7 +12,9 @@ Going to use mix of WebGL and HTML/CSS for the loader (loading bar)
 pnpm add gsap
 ```
 
-# Mimic bad bandwith for testing of your loading bar
+# Network throttling
+
+W want to mimic bad bandwith for testing of your loading bar animation
 
 In the Developer Tools panel, go to the Network tab Check the Disable cache
 

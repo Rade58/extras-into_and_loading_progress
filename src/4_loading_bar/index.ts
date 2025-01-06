@@ -68,6 +68,21 @@ import overlayFragmentShader from "./overlay/fragment.glsl";
 // we could have created a new plane with a shader material
 // but for the sake of the lesson we will add bar in HTML
 
+// We could done this just like we did with overlay
+// and we would actually do that in real project
+// but we are also practicing usage of HTML and CSS with WEBGL
+// in this lesson
+
+// We will create div element with class loading-bar
+// and we will style it in global.css
+
+// I had z-index set above 0 for the canvas
+// for some reason, make sure to remove this, because we want
+// bar to be above canvas
+
+// we will update bar scale in a onProgress callback
+// and we are going to hide bar in onLoad callback
+
 // ------------ gui -------------------
 /**
  * @description Debug UI - lil-ui
@@ -176,6 +191,9 @@ if (canvas) {
   // -------------------------------------------------------------
   // ---- loaders and loading manager -------
 
+  const loading_bar: HTMLDivElement | null =
+    document.querySelector(".loading-bar");
+
   /**
    * @description loaders and LoadingManager
    */
@@ -183,13 +201,45 @@ if (canvas) {
   const loadingManager = new THREE.LoadingManager(
     () => {
       // onLoad
+      if (loading_bar) {
+        // loading_bar.style.display = "none";
+
+        setTimeout(() => {
+          loading_bar.style.display = "none";
+        }, 500);
+      }
+
+      //
       gsap.to(overlayMaterial.uniforms.uAlpha, { value: 0, duration: 3 });
     },
-    (_, loaded, total) => {
+    /**
+     *
+     * @param url of the asset
+     * @param loaded how much assets were loaded
+     * @param total total number of assets to load
+     */
+    (url, loaded, total) => {
+      // const progress = (100 * loaded) / total;
+      // console.log(`progress: ${progress}%`);
+
+      const progressRatio = loaded / total;
+      // console.log(`progressRatio: ${progressRatio}`);
+
+      if (loading_bar) {
+        // like this
+        // loading_bar.style.transform = `scaleX(${progressRatio})`;
+        // or by using css custom property which I like more
+        // above one would still work (we don't need to alter CSS for it to work)
+
+        loading_bar.style.setProperty("--progress", `${progressRatio}`);
+
+        if (loaded === total) {
+          loading_bar.style.opacity = "0";
+        }
+      }
+
       if (loaded === total) {
-        console.log(_);
-        const progress = (100 * loaded) / total;
-        console.log(`progress: ${progress}%`);
+        console.log("All assets loaded");
       }
     },
     () => {
